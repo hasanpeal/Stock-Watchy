@@ -3,6 +3,8 @@ import bodyParser from "body-parser";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import SimplDB from "simpl.db"; // Importing simpl.db
+import axios from "axios";
+import stocks from "stock-ticker-symbol";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -34,6 +36,7 @@ function authSignUp(user, pass, mail) {
   const newUser = {
     email: mail,
     password: pass,
+    stockData: [],
   };
 
   if (db.has(user)) {
@@ -57,10 +60,53 @@ app.get("/", (req, res) => {
   res.render("auth.ejs");
 });
 
-// Get request for the sign-up page
-app.post("/sign-up", (req, res) => {
-  res.render("signup.ejs");
+app.post("/watchlist/ticker-added", (req, res) => {
+  const ticker = req.body["tickerInput"];
+  const authName = req.body["authName"]; // Get the username from the form data
+
+  console.log("Ticker Input:", ticker);
+  console.log("Auth Name:", authName);
+
+  // Add the ticker to the user's stocks list
+  const user = db.get(authName);
+
+  if (user) {
+    var stockName = stocks.lookup(ticker);
+    var tickerFormat = `${ticker}|1D`;
+
+    console.log("Stock Name:", stockName);
+    console.log("Ticker Format:", tickerFormat);
+
+    // Ensure stockData is an array
+    if (!Array.isArray(user.stockData)) {
+      user.stockData = [];
+    }
+
+    // Add the new stock data to the array
+    user.stockData.push({ symbol: stockName, ticker: tickerFormat });
+
+    // Log the updated user data
+    console.log("Updated User Data:", user);
+
+    // Save the updated user data back to the database
+    db.set(authName, user);
+
+    // Manually save the database to the file
+    db.save(); // This forces a manual save to ensure data is written to the file
+
+    // Log the database entry to verify
+    console.log("Database Entry:", db.get(authName));
+  }
+
+  // Redirect to the watchlist page and render with updated data
+  res.render("watchlist.ejs", {
+    dataBase: db,
+    authName: authName,
+  });
 });
+
+
+///////
 
 // Post request for handling sign-ups
 app.post("/sign-up-successful", (req, res) => {
@@ -70,17 +116,20 @@ app.post("/sign-up-successful", (req, res) => {
       req.body["signupPass"],
       req.body["signupEmail"]
     );
-    res.render("auth.ejs", {val: 1}); // Redirect to home page after successful sign-up
+    res.render("auth.ejs", { val: 1 }); // Redirect to home page after successful sign-up
   } catch (err) {
-    res.render("auth.ejs", {val: 2}); // Handle errors during sign-up
+    res.render("auth.ejs", { val: 2 }); // Handle errors during sign-up
   }
 });
 
 // Post request for authentication
-app.post("/watchlist", (req, res) => {
+app.post("/watchlist", async (req, res) => {
   const authResult = checkAuth(req.body["username"], req.body["password"]);
   if (authResult === 1) {
-    res.send("<h1> Successful </h1>");
+    res.render("watchlist.ejs", {
+      dataBase: db,
+      authName: req.body["username"],
+    });
   } else if (authResult === 2) {
     res.render("auth.ejs", { val: 3 });
   } else if (authResult === 0) {
@@ -98,6 +147,11 @@ app.post("/delete-user", (req, res) => {
   } catch (err) {
     res.send(`<h1> Delete Failed: ${err.message} </h1>`);
   }
+});
+
+// Get request for the sign-up page
+app.post("/sign-up", (req, res) => {
+  res.render("signup.ejs");
 });
 
 // Listening port

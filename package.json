@@ -4,7 +4,8 @@
     "body-parser": "^1.20.2",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "simpl.db": "^2.13.0"
+    "simpl.db": "^2.13.0",
+    "stock-ticker-symbol": "^1.1.0"
   },
   "type": "module"
 }
