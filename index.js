@@ -70,7 +70,7 @@ app.post("/sign-up-successful", (req, res) => {
       req.body["signupPass"],
       req.body["signupEmail"]
     );
-    res.redirect("/"); // Redirect to home page after successful sign-up
+    res.render("auth.ejs", {val: 1}); // Redirect to home page after successful sign-up
   } catch (err) {
     res.send(`<h1> Sign Up Failed: ${err.message} </h1>`); // Handle errors during sign-up
   }
