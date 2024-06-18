@@ -12,15 +12,57 @@
   <form class="d-flex flex-column align-items-center justify-content-center vh-100" action="/watchlist" method="POST">
 
     <% if (locals.val === 1) { %>
-      <div class="toast mb-3" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast mb-3 w-50" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
           <img src="./image/cash-coin.svg" class="rounded me-2" alt="...">
           <strong class="me-auto">Stock Wathcy</strong>
           <small>1 seconds ago</small>
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body">
-          Sign up successful!
+        <div class="toast-body" style="text-align: center">
+          Sign up successful
+        </div>
+      </div>
+    <% } %>
+
+    <% if (locals.val === 2) { %>
+      <div class="toast mb-3 w-50" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <img src="./image/cash-coin.svg" class="rounded me-2" alt="...">
+          <strong class="me-auto">Stock Wathcy</strong>
+          <small>1 seconds ago</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="text-align: center">
+          User already exists. Try different username and email
+        </div>
+      </div>
+    <% } %>
+
+    <% if (locals.val === 3) { %>
+      <div class="toast mb-3 w-50" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <img src="./image/cash-coin.svg" class="rounded me-2" alt="...">
+          <strong class="me-auto">Stock Wathcy</strong>
+          <small>1 seconds ago</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="text-align: center">
+          Wrong username
+        </div>
+      </div>
+    <% } %>
+
+    <% if (locals.val === 4) { %>
+      <div class="toast mb-3 w-50" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <img src="./image/cash-coin.svg" class="rounded me-2" alt="...">
+          <strong class="me-auto">Stock Wathcy</strong>
+          <small>1 seconds ago</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="text-align: center">
+          Wrong password
         </div>
       </div>
     <% } %>

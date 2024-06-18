@@ -72,7 +72,7 @@ app.post("/sign-up-successful", (req, res) => {
     );
     res.render("auth.ejs", {val: 1}); // Redirect to home page after successful sign-up
   } catch (err) {
-    res.send(`<h1> Sign Up Failed: ${err.message} </h1>`); // Handle errors during sign-up
+    res.render("auth.ejs", {val: 2}); // Handle errors during sign-up
   }
 });
 
@@ -82,9 +82,9 @@ app.post("/watchlist", (req, res) => {
   if (authResult === 1) {
     res.send("<h1> Successful </h1>");
   } else if (authResult === 2) {
-    res.send("<h1> Wrong Username </h1>");
+    res.render("auth.ejs", { val: 3 });
   } else if (authResult === 0) {
-    res.send("<h1> Wrong Password </h1>");
+    res.render("auth.ejs", { val: 4 });
   } else {
     res.send("<h1> Err </h1>");
   }
