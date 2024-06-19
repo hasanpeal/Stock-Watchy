@@ -14,14 +14,19 @@
                 <small class="ps-2"> Stock Watchy </small>
             </a>
             <form class="d-flex" role="search" action="/watchlist/ticker-added" method="POST">
-                <input class="form-control me-2" name="tickerInput" type="search" placeholder="Ticker" aria-label="Search">
+                <input class="form-control me-2" id="tickerInput" name="tickerInput" type="search" placeholder="Ticker" aria-label="Search" list="tickerSuggestions">
                 <input type="hidden" name="authName" value="<%= authName %>"> <!-- Include the username -->
-                <button class="btn btn-outline-success w-75" type="submit">Add Stock</button>
+                <button class="btn btn-outline-success w-75" type="submit" id="addStockButton" >Add Stock</button>
+                <datalist id="tickerSuggestions">
+                    <% locals.tickers.forEach(ticker => { %>
+                        <option value="<%= ticker %>"><%= ticker %></option>
+                    <% }) %>
+                </datalist>
             </form>
 
         </div>
     </nav>
-
+    
     <% console.log(locals.dataBase.get(authName).stockData.length); %>
     <% if(locals.dataBase.get(authName).stockData.length === 0) { %>
       <div id="welcomeToast" class="toast mb-3 w-50 container" role="alert" aria-live="assertive" aria-atomic="true">
@@ -109,6 +114,19 @@
                 var toast = new bootstrap.Toast(toastEl);
                 toast.show();
             }
+
+            const tickers = <%- JSON.stringify(tickers) %>;
+            const tickerInput = document.getElementById('tickerInput');
+            const addStockButton = document.getElementById('addStockButton');
+
+            tickerInput.addEventListener('input', () => {
+                const inputValue = tickerInput.value.toUpperCase();
+                if (tickers.includes(inputValue)) {
+                    addStockButton.disabled = false;
+                } else {
+                    addStockButton.disabled = true;
+                }
+            });
         });
     </script>
 </body>

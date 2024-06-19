@@ -1,14 +1,13 @@
-import axios from "axios";
+import fs from "fs";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const tickerData = JSON.parse(
+  fs.readFileSync(__dirname + "/tickerToName.json", "utf8")
+);
 
-const apiKey = "ZCBFTYLPFC8IO4LB"; // Replace with your actual API key
-const ticker = "AAPL";
-const apiUrl = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${ticker}&apikey=${apiKey}`;
+const newData = Object.keys(tickerData);
 
-axios
-  .get(apiUrl)
-  .then((response) => {
-    console.log("News Sentiment API Response:", response.data);
-  })
-  .catch((error) => {
-    console.error("Error fetching news sentiment:", error);
-  });
+newData.forEach(element => {
+  console.log(element);
+});

@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import SimplDB from "simpl.db"; // Importing simpl.db
 import axios from "axios";
 import stocks from "stock-ticker-symbol";
+import fs from "fs";
 import { title } from "process";
 import { url } from "inspector";
 
@@ -14,6 +15,9 @@ const port = 3000;
 
 // Initialize the database
 const db = new SimplDB({ filePath: "./database.json" });
+const tickerData = JSON.parse(
+  fs.readFileSync(__dirname + "/tickerToName.json", "utf8")
+);
 
 // This line lets us use .body method
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -181,6 +185,7 @@ app.post("/watchlist/ticker-added", async (req, res) => {
     apiScore: overall_sentiment_score,
     apiLabel: overall_sentiment_label,
     stockCache: user.stockCache,
+    tickers: Object.keys(tickerData),
   });
 });
 
@@ -211,6 +216,7 @@ app.post("/watchlist", async (req, res) => {
       dataBase: db,
       authName: req.body["username"],
       stockCache: stockCache,
+      tickers: Object.keys(tickerData),
     });
   } else if (authResult === 2) {
     res.render("auth.ejs", { val: 3 });
