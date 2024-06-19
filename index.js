@@ -5,6 +5,8 @@ import { fileURLToPath } from "url";
 import SimplDB from "simpl.db"; // Importing simpl.db
 import axios from "axios";
 import stocks from "stock-ticker-symbol";
+import { title } from "process";
+import { url } from "inspector";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -60,9 +62,37 @@ app.get("/", (req, res) => {
   res.render("auth.ejs");
 });
 
-app.post("/watchlist/ticker-added", (req, res) => {
+app.post("/watchlist/ticker-added", async (req, res) => {
   const ticker = req.body["tickerInput"];
   const authName = req.body["authName"]; // Get the username from the form data
+  const apiKey = "KF70Z8IX6PEDKNGP"; // Replace with your actual API key
+  const apiUrl = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${ticker}&apikey=${apiKey}&sort=LATEST`;
+
+  let title, url, overall_sentiment_score, overall_sentiment_label;
+
+  try {
+    const result = await axios.get(apiUrl);
+    console.log(result.data);
+
+    // Access a random article from the feed array
+    const feed = result.data.feed;
+    if (feed && feed.length > 0) {
+      const randomArticle = feed[Math.floor(Math.random() * feed.length)];
+      ({ title, url, overall_sentiment_score, overall_sentiment_label } =
+        randomArticle);
+
+      console.log("Random Article:");
+      console.log("Title:", title);
+      console.log("URL:", url);
+      console.log("Overall Sentiment Score:", overall_sentiment_score);
+      console.log("Overall Sentiment Label:", overall_sentiment_label);
+    } else {
+      console.log("No articles found in the feed.");
+    }
+  } catch (error) {
+    console.error("Error fetching news sentiment:", error);
+    return res.status(500).send("Error fetching news sentiment");
+  }
 
   console.log("Ticker Input:", ticker);
   console.log("Auth Name:", authName);
@@ -71,7 +101,7 @@ app.post("/watchlist/ticker-added", (req, res) => {
   const user = db.get(authName);
 
   if (user) {
-    var stockName = stocks.lookup(ticker);
+    var stockName = stocks.lookup(ticker).split(/[\s,.]/)[0];
     var tickerFormat = `${ticker}|1D`;
 
     console.log("Stock Name:", stockName);
@@ -102,9 +132,12 @@ app.post("/watchlist/ticker-added", (req, res) => {
   res.render("watchlist.ejs", {
     dataBase: db,
     authName: authName,
+    apiTitle: title,
+    apiLink: url,
+    apiScore: overall_sentiment_score,
+    apiLabel: overall_sentiment_label,
   });
 });
-
 
 ///////
 
