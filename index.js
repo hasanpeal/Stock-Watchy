@@ -6,9 +6,11 @@ import SimplDB from "simpl.db"; // Importing simpl.db
 import axios from "axios";
 import stocks from "stock-ticker-symbol";
 import fs from "fs";
+import dotenv from "dotenv";
 import { title } from "process";
 import { url } from "inspector";
 
+dotenv.config();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = 3000;
@@ -70,7 +72,7 @@ app.get("/", (req, res) => {
 app.post("/watchlist/ticker-added", async (req, res) => {
   const ticker = req.body["tickerInput"];
   const authName = req.body["authName"]; // Get the username from the form data
-  const apiKey = "KF70Z8IX6PEDKNGP"; // Replace with your actual API key
+  const apiKey = process.env.API_KEY; // Replace with your actual API key
   const apiUrl = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${ticker}&apikey=${apiKey}&sort=LATEST`;
 
   let title, url, overall_sentiment_score, overall_sentiment_label;
