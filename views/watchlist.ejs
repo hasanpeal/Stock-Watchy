@@ -99,6 +99,13 @@
                                 <p>No news sentiment data available.</p>
                               </div>
                             <% } %>
+
+                            <!-- Delete Button -->
+                        <form action="/watchlist/delete-ticker" method="POST">
+                            <input type="hidden" name="ticker" value="<%= stock.symbol %>">
+                            <input type="hidden" name="authName" value="<%= authName %>">
+                            <button class="btn btn-danger mt-3" type="submit">Delete</button>
+                        </form>
                         </div>
                     </div>
                 </div>

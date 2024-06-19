@@ -243,6 +243,41 @@ app.post("/sign-up", (req, res) => {
   res.render("signup.ejs");
 });
 
+// Post request to delete a ticker from the watchlist
+app.post("/watchlist/delete-ticker", (req, res) => {
+  const ticker = req.body["ticker"];
+  const authName = req.body["authName"]; // Get the username from the form data
+
+  // Get the user data
+  const user = db.get(authName);
+
+  if (user) {
+    // Remove the stock from the user's stocks list
+    user.stockData = user.stockData.filter(stock => stock.symbol !== ticker);
+
+    // Log the updated user data
+    console.log("Updated User Data:", user);
+
+    // Save the updated user data back to the database
+    db.set(authName, user);
+
+    // Manually save the database to the file
+    db.save(); // This forces a manual save to ensure data is written to the file
+
+    // Log the database entry to verify
+    console.log("Database Entry:", db.get(authName));
+  }
+
+  // Render the watchlist page with updated data
+  res.render("watchlist.ejs", {
+    dataBase: db,
+    authName: authName,
+    stockCache: user.stockCache,
+    tickers: Object.keys(tickerData),
+  });
+});
+
+
 // Listening port
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
