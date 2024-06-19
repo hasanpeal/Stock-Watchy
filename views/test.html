@@ -81,11 +81,11 @@
                             <!-- TradingView Widget END -->
                             
                             <!-- Display API Data -->
-                            <% const cacheData = locals.stockCache[stock.ticker.split('|')[0]]; %>
+                            <% const cacheData = stockCache[stock.symbol]; %>
                             <% if (cacheData) { %>
                               <div class="mt-3">
                                 <h5>News Sentiment</h5>
-                                <p><strong>Article:</strong> <a href="<%= cacheData.data.url %>"><%= cacheData.data.title %></a></p>
+                                <p><strong>Title:</strong> <a href="<%= cacheData.data.url %>"><%= cacheData.data.title %></a></p>
                                 <p><strong>Overall Sentiment Score:</strong> <%= cacheData.data.overall_sentiment_score %></p>
                                 <p><strong>Overall Sentiment Label:</strong> <%= cacheData.data.overall_sentiment_label %></p>
                               </div>
