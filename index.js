@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import SimplDB from "simpl.db"; // Importing simpl.db
+import SimplDB from "simpl.db"; // Importing simple database npm
 import axios from "axios";
 import stocks from "stock-ticker-symbol";
 import fs from "fs";
@@ -191,8 +191,6 @@ app.post("/watchlist/ticker-added", async (req, res) => {
   });
 });
 
-///////
-
 // Post request for handling sign-ups
 app.post("/sign-up-successful", (req, res) => {
   try {
@@ -230,7 +228,7 @@ app.post("/watchlist", async (req, res) => {
 });
 
 
-// Post request for deleting a user (for demonstration)
+// Post request for deleting a user
 app.post("/delete-user", (req, res) => {
   try {
     deleteUser(req.body["username"]);

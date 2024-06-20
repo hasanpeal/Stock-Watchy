@@ -14,7 +14,7 @@
             </a>
             <form class="d-flex" role="search" action="/watchlist/ticker-added" method="POST">
                 <input class="form-control me-2" id="tickerInput" name="tickerInput" type="search" placeholder="Ticker" aria-label="Search" list="tickerSuggestions">
-                <input type="hidden" name="authName" value="<%= authName %>"> <!-- Include the username -->
+                <input type="hidden" name="authName" value="<%= authName %>"> 
                 <button class="btn btn-outline-success w-75" type="submit" id="addStockButton" >Add Stock</button>
                 <datalist id="tickerSuggestions">
                     <% locals.tickers.forEach(ticker => { %>
